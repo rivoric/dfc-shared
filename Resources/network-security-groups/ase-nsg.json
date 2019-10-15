@@ -51,45 +51,6 @@
                         }
                     },
                     {
-                        "name": "Inbound-FTP",
-                        "properties": {
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "21",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Allow",
-                            "priority": 140,
-                            "direction": "Inbound"
-                        }
-                    },
-                    {
-                        "name": "Inbound-FTPS",
-                        "properties": {
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "990",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Allow",
-                            "priority": 150,
-                            "direction": "Inbound"
-                        }
-                    },
-                    {
-                        "name": "Inbound-FTP-Data",
-                        "properties": {
-                            "protocol": "Tcp",
-                            "sourcePortRange": "*",
-                            "destinationPortRange": "10001-10020",
-                            "sourceAddressPrefix": "*",
-                            "destinationAddressPrefix": "*",
-                            "access": "Allow",
-                            "priority": 160,
-                            "direction": "Inbound"
-                        }
-                    },
-                    {
                         "name": "Outbound-HTTPS",
                         "properties": {
                             "protocol": "Tcp",
