@@ -286,23 +286,6 @@
       }
     },
     {
-      "name": "sharedKeyVault",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('dfcDevOpsTemplatesUrl'),'keyvault.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "keyVaultName": {
-            "value": "[variables('keyVaultName')]"
-          }
-        }
-      }
-    },
-    {
       "name": "[concat('sharedKeyVaultDefaultReadAccessPolicy-', copyIndex())]",
       "type": "Microsoft.Resources/deployments",
       "condition": "[greater(length(parameters('defaultKeyVaultReadAccess')), 0)]",
@@ -336,9 +319,6 @@
           }
         }
       },
-      "dependsOn": [
-        "sharedKeyVault"
-      ],
       "metadata": {
         "description": "The count parameter in the copy block is populated with either the length of the defaultKeyVaultReadAccess parameter, or 1 if it's empty  and is to work around copyIndex erroring when it's 0, even if it's in a conditional block."
       },
@@ -382,7 +362,6 @@
         }
       },
       "dependsOn": [
-        "sharedKeyVault",
         "keyvaultReadAccessCopy"
       ],
       "metadata": {
@@ -495,7 +474,6 @@
       },
       "dependsOn": [
         "sharedApimServiceBasic",
-        "sharedKeyVault",
         "defaultKeyVaultWriteAccessCopy"
       ]
     },
@@ -706,14 +684,6 @@
     }
   ],
   "outputs": {
-    "keyVaultName": {
-      "type": "string",
-      "value": "[variables('keyVaultName')]"
-    },
-    "KeyVaultUri": {
-      "type": "string",
-      "value": "[reference('sharedKeyVault','2017-05-10').outputs.KeyVaultUri.value]"
-    },
     "storageAccountName": {
       "type": "string",
       "value": "[variables('storageAccountName')]"
