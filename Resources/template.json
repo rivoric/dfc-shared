@@ -8,81 +8,6 @@
         "description": "Prefix for all resources created for the project (except storage account, see below). Should be in the format dfc-env-proj"
       }
     },
-    "aksAgentVmSize": {
-      "type": "string"
-    },
-    "aksDnsServiceIp": {
-      "type": "string"
-    },
-    "aksKubernetesVersion": {
-      "type": "string"
-    },
-    "aksNodeResourceGroupName": {
-      "type": "string"
-    },
-    "aksRbacClientAppId": {
-      "type": "string"
-    },
-    "aksRbacServerAppId": {
-      "type": "string"
-    },
-    "aksRbacServerAppSecret": {
-      "type": "securestring"
-    },
-    "aksRbacTenantId": {
-      "type": "string"
-    },
-    "aksRouteTableName": {
-      "type": "string"
-    },
-    "aksServiceCidr": {
-      "type": "string"
-    },
-    "aksServicePrincipalClientId": {
-      "type": "string"
-    },
-    "aksServicePrincipalSecret": {
-      "type": "securestring"
-    },
-    "aksSubnetName": {
-      "type": "string"
-    },
-    "aksVirtualNetworkAddressPrefix": {
-      "type": "string"
-    },
-    "aksVnetName": {
-      "type": "string"
-    },
-    "aksVnetCreate": {
-      "type": "bool",
-      "defaultValue": true,
-      "metadata": {
-        "description": "Bool to determine whether to create a VNet for AKS - defaults to create a VNet"
-      }
-    },
-    "aksVnetResourceGroupName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Only required if the VNet will be externally created (ie PP or PROD).  The resource group that holds the VNet that AKS will be connected to."
-      }
-    },
-    "aksAppGatewaySubnetName": {
-      "type": "string"
-    },
-    "aksAppGatewayNetworkSecurityGroup": {
-      "type": "string",
-      "metadata": {
-        "description": "The network security group assigned to the AKS App Gateway subnet"
-      }
-    },
-    "aksInboundIpAddressRange": {
-      "type": "string",
-      "defaultValue": "0.0.0.0/0",
-      "metadata": {
-        "description": "A comma separated list of IP addresses allowed to access the AKS App Gateway"
-      }
-    },
     "apimExists": {
       "type": "bool",
       "metadata": {
@@ -312,9 +237,7 @@
     "deployAse": "[not(equals(parameters('aseDomainName'), ''))]",
     "defaultKeyVaultReadAccessHack": "[if(empty(parameters('defaultKeyVaultReadAccess')), 1, length(parameters('defaultKeyVaultReadAccess')))]",
     "defaultKeyVaultWriteAccessHack": "[if(empty(parameters('defaultKeyVaultWriteAccess')), 1, length(parameters('defaultKeyVaultWriteAccess')))]",
-    "containerRegistryName": "[toLower(concat(replace(parameters('sharedPrefix'),'-',''),'cr'))]",
-    "aksClusterName": "[concat(parameters('sharedPrefix'), '-aks')]",
-    "aksNodeResourceGroupName": "[concat(variables('aksClusterName'), 'nodes-rg')]"
+    "containerRegistryName": "[toLower(concat(replace(parameters('sharedPrefix'),'-',''),'cr'))]"
   },
   "resources": [
     {
@@ -334,101 +257,6 @@
           }
         }
       }
-    },
-    {
-      "name": "sharedAzureKubernetesServiceNetwork",
-      "type": "Microsoft.Resources/deployments",
-      "condition": "[parameters('aksVnetCreate')]",
-      "apiVersion": "2017-05-10",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('localTemplatesUrl'), 'networks/aks-vnet.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "aksNodeResourceGroupName": {
-            "value": "[parameters('aksNodeResourceGroupName')]"
-          },
-          "aksRouteTableName": {
-            "value": "[parameters('aksRouteTableName')]"
-          },
-          "aksSubnetName": {
-            "value": "[parameters('aksSubnetName')]"
-          },
-          "aksAppGatewaySubnetName": {
-            "value": "[parameters('aksAppGatewaySubnetName')]"
-          },
-          "virtualNetworkAddressPrefix": {
-            "value": "[parameters('aksVirtualNetworkAddressPrefix')]"
-          },
-          "vnetName": {
-            "value": "[parameters('aksVnetName')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "sharedAzureKubernetesService",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('dfcDevOpsTemplatesUrl'),'aks.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "clusterName": {
-            "value": "[variables('aksClusterName')]"
-          },
-          "agentVMSize": {
-            "value": "[parameters('aksAgentVmSize')]"
-          },
-          "dnsServiceIp": {
-            "value": "[parameters('aksDnsServiceIp')]"
-          },
-          "kubernetesVersion": {
-            "value": "[parameters('aksKubernetesVersion')]"
-          },
-          "nodeResourceGroup": {
-            "value": "[variables('aksNodeResourceGroupName')]"
-          },
-          "rbacClientAppId": {
-            "value": "[parameters('aksRbacClientAppId')]"
-          },
-          "rbacServerAppId": {
-            "value": "[parameters('aksRbacServerAppId')]"
-          },
-          "rbacServerAppSecret": {
-            "value": "[parameters('aksRbacServerAppSecret')]"
-          },
-          "rbacTenantId": {
-            "value": "[parameters('aksRbacTenantId')]"
-          },
-          "serviceCidr": {
-            "value": "[parameters('aksServiceCidr')]"
-          },
-          "servicePrincipalClientId": {
-            "value": "[parameters('aksServicePrincipalClientId')]"
-          },
-          "servicePrincipalSecret": {
-            "value": "[parameters('aksServicePrincipalSecret')]"
-          },
-          "subnetName": {
-            "value": "[parameters('aksSubnetName')]"
-          },
-          "virtualNetworkName": {
-            "value": "[parameters('aksVnetName')]"
-          },
-          "virtualNetworkResourceGroup": {
-            "value": "[if(parameters('aksVnetCreate'), resourceGroup().name, parameters('aksVnetResourceGroupName'))]"
-          }
-        }
-      },
-      "dependsOn": [
-        "sharedAzureKubernetesServiceNetwork"
-      ]
     },
     {
       "name": "sharedManagedInstanceEnvironment",
@@ -836,39 +664,6 @@
           },
           "cloudServiceIpAddress": {
             "value": "[parameters('appGatewayCloudServiceIpAddress')]"
-          }
-        }
-      }
-    },
-    {
-      "name": "aksAppGatewayNetworkSecurityGroup",
-      "condition": "[equals(parameters('envType'),'dev')]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2017-05-10",
-      "dependsOn": [
-        "sharedManagedInstanceEnvironment"
-      ],
-      "properties": {
-        "mode": "Incremental",
-        "templateLink": {
-          "uri": "[concat(variables('localTemplatesUrl'), 'network-security-groups/aksag-nsg.json')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "name": {
-            "value": "[parameters('aksAppGatewayNetworkSecurityGroup')]"
-          },
-          "agSubnetName": {
-            "value": "[parameters('aksAppGatewaySubnetName')]"
-          },
-          "vnetName": {
-            "value": "[parameters('aksVnetName')]"
-          },
-          "vnetResourceGroupName": {
-            "value": "[if(equals(parameters('envType'),'dev'), resourceGroup().name, parameters('aksVnetResourceGroupName'))]"
-          },
-          "inboundIpAddressRange": {
-            "value": "[parameters('aksInboundIpAddressRange')]"
           }
         }
       }
