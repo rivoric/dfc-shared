@@ -12,7 +12,7 @@ resources:
   - repository: dfc-devops
     type: github
     name: SkillsFundingAgency/dfc-devops
-    endpoint: 'GitHub (ESFA)'
+    endpoint: GitHub
     ref: refs/tags/v1.10.2
 
 pr:
@@ -28,9 +28,6 @@ stages:
 - stage: Build
   jobs:
   - job: TestAndPublish
-    variables:
-      - group: 'KeyVault - dfc-dev-shared-kv'
-      - group: dfc-shared-infrastructure-dev
     steps:
     # ARM template
     - template: AzureDevOpsTemplates/Build/StepTemplates/dfc-arm-build.yml@dfc-devops
