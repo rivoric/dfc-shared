@@ -21,7 +21,7 @@ pr:
     - master
 
 pool:
-  name: vs2017-win2016
+  name: windows-latest
 
 stages:
 
