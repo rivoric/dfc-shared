@@ -35,6 +35,7 @@ stages:
         ArmTemplateRoot: '$(System.DefaultWorkingDirectory)\Resources'
         SolutionBaseName: $(SolutionBaseName)
         TokenizeTestParameters: true
+        AzureSubscription: MSDN
     - task: CopyFiles@2
       displayName: 'Copy PSScripts Files to: $(Build.ArtifactStagingDirectory)'
       inputs:
