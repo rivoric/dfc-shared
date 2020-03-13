@@ -9,7 +9,7 @@
       "value": __apimExists__
     },
     "deployApim": {
-      "value": true
+      "value": false
     },
     "apimHostnameRoot": {
       "value": "__apimHostnameRoot__"
