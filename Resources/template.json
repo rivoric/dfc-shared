@@ -115,6 +115,7 @@
       "allowedValues": [
         "DEV",
         "SIT",
+        "TEST",
         "LAB",
         "OAT",
         "PP",
