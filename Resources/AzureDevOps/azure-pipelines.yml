@@ -11,9 +11,9 @@ resources:
   - repository: self
   - repository: dfc-devops
     type: github
-    name: SkillsFundingAgency/dfc-devops
-    endpoint: 'GitHub (ESFA)'
-    ref: refs/tags/v1.10.2
+    name: rivoric/dfc-devops
+    endpoint: GitHub
+    ref: refs/tags/v2.0.0
 
 pr:
   branches:
@@ -21,16 +21,13 @@ pr:
     - master
 
 pool:
-  name: windows-latest
+  vmImage: 'windows-latest'
 
 stages:
 
 - stage: Build
   jobs:
   - job: TestAndPublish
-    variables:
-      - group: 'KeyVault - dfc-dev-shared-kv'
-      - group: dfc-shared-infrastructure-dev
     steps:
     # ARM template
     - template: AzureDevOpsTemplates/Build/StepTemplates/dfc-arm-build.yml@dfc-devops
@@ -38,6 +35,7 @@ stages:
         ArmTemplateRoot: '$(System.DefaultWorkingDirectory)\Resources'
         SolutionBaseName: $(SolutionBaseName)
         TokenizeTestParameters: true
+        AzureSubscription: MSDN
     - task: CopyFiles@2
       displayName: 'Copy PSScripts Files to: $(Build.ArtifactStagingDirectory)'
       inputs:
