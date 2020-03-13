@@ -21,7 +21,7 @@ pr:
     - master
 
 pool:
-  name: windows-latest
+  vmImage: 'windows-latest'
 
 stages:
 
